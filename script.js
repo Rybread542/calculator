@@ -26,7 +26,7 @@ function pressNumber(number) {
         equalsJustPressed = false;
     }
 
-    if(display.textContent.length <= 8) {
+    if(display.textContent.length <= 10) {
 
         if(nextInputResets || (display.textContent === '0' && number != '.')) {
             updateDisplay(number)
@@ -84,7 +84,7 @@ function setOperator(operator){
 }
 
 function operatorButton(operator) {
-    
+
     equalsJustPressed = false;
     if(display.textContent == 0){
         currentInput = true;
