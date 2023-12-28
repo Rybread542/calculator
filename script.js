@@ -113,6 +113,10 @@ function evaluate() {
             break;
 
         case '/':
+            if (num2 === 0) {
+                total = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+                break;
+            }
             total = num1/num2;
             break;
 
