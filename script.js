@@ -11,7 +11,7 @@ let values = [];
 
 let currentTotal = 0;
 let lastNum;
-let lastOperator;
+let equalsJustPressed;
 let currentOperator = '';
 let nextInputResets = false;
 let currentInput = false;
@@ -20,6 +20,12 @@ display.textContent=0;
 
 function pressNumber(number) {
     currentInput = true;
+
+    if (equalsJustPressed) {
+        values = [];
+        equalsJustPressed = false;
+    }
+
     if(display.textContent.length <= 8) {
 
         if(nextInputResets || (display.textContent === '0' && number != '.')) {
@@ -78,7 +84,8 @@ function setOperator(operator){
 }
 
 function operatorButton(operator) {
-
+    
+    equalsJustPressed = false;
     if(display.textContent == 0){
         currentInput = true;
     }
@@ -128,24 +135,16 @@ function evaluate() {
 
     updateDisplay(total);
     lastNum = num2;
-
-    if(currentInput){
-        values = [total];
-    }
-
-    else{
-        values = [];
-    }
+    values = [total];
 }
 
 function equals() {
     if (currentInput) {
         storeValue();
-        currentInput = false;
-
         evaluate();
+        currentInput = false;
         nextInputResets = true;
-        
+        equalsJustPressed = true;
     }
 
     else{
