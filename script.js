@@ -11,6 +11,7 @@ let values = [];
 
 let currentTotal = 0;
 let lastNum;
+let lastOperator;
 let currentOperator = '';
 let nextInputResets = false;
 let currentInput = false;
@@ -89,6 +90,7 @@ function operatorButton(operator) {
         }
         nextInputResets = true;
     }
+
     setOperator(operator);
     currentInput = false;
 
@@ -126,21 +128,31 @@ function evaluate() {
 
     updateDisplay(total);
     lastNum = num2;
-    values = [total];
+
+    if(currentInput){
+        values = [total];
+    }
+
+    else{
+        values = [];
+    }
 }
 
 function equals() {
     if (currentInput) {
         storeValue();
+        currentInput = false;
+
         evaluate();
         nextInputResets = true;
-        currentInput = false;
+        
     }
 
     else{
-        values.push(lastNum)
+        values.push(lastNum);
         evaluate();
     }
+    
 }
 
 function posNeg() {
