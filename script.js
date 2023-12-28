@@ -23,6 +23,7 @@ function pressNumber(number) {
 
     if (equalsJustPressed) {
         values = [];
+        setOperator('');
         equalsJustPressed = false;
     }
 
