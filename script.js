@@ -58,9 +58,11 @@ function updateDisplay(number) {
     else{
         let length = number.toString().length;
         if (length > 9 && number > 0) {
+            number = +number;
             number = number.toExponential(4);
         }
         else if(length > 8 && number < 0){
+            number = +number;
             number = number.toExponential(3);
         }
     }
