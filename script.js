@@ -5,21 +5,23 @@ const clearButton = document.querySelector('.C')
 const operatorButtons = Array.from(document.querySelectorAll('.operator'))
 const equalsButton = document.querySelector('.equals');
 const posNegButton = document.querySelector('.pos-neg');
+const decimalButton = document.querySelector('.decimal');
+const percentButton = document.querySelector('.percent');
 let values = [];
 
 let currentTotal = 0;
 let lastNum;
 let currentOperator = '';
 let nextInputResets = false;
-let currentInput;
+let currentInput = false;
 display.textContent=0;
 
 
 function pressNumber(number) {
     currentInput = true;
-    if(display.textContent.length <= 9) {
+    if(display.textContent.length <= 8) {
 
-        if(nextInputResets) {
+        if(nextInputResets || (display.textContent === '0' && number != '.')) {
             updateDisplay(number)
             nextInputResets = false;
         }
@@ -33,7 +35,28 @@ function pressNumber(number) {
 }
 
 function updateDisplay(number) {
-    display.textContent = +number;
+    if (number > Math.pow(10, 99)){
+        number = '∞';
+    }
+
+    if (number < Math.pow(-10, 99)){
+        number = '-∞';
+    }
+
+    if (number < Math.pow(10, -99) && number > 0 && number != 0){
+        number = 0;
+    }
+
+    else{
+        let length = number.toString().length;
+        if (length > 9 && number > 0) {
+            number = number.toExponential(4);
+        }
+        else if(length > 8 && number < 0){
+            number = number.toExponential(3);
+        }
+    }
+    display.textContent = number;
 }
 
 function clearDisplay(){
@@ -54,6 +77,10 @@ function setOperator(operator){
 }
 
 function operatorButton(operator) {
+
+    if(display.textContent == 0){
+        currentInput = true;
+    }
 
     if(currentInput) {
         storeValue();
@@ -88,6 +115,9 @@ function evaluate() {
         case '/':
             total = num1/num2;
             break;
+
+        default:
+            total = num1;
     }
 
     updateDisplay(total);
@@ -110,14 +140,36 @@ function equals() {
 }
 
 function posNeg() {
-    if (display.textContent.startsWith('-')){
-        updateDisplay(Math.abs(display.textContent));
-    }
+    if (display.textContent != 0){
+        if (display.textContent.startsWith('-')){
+            updateDisplay(Math.abs(display.textContent));
+        }
 
-    else{
-        updateDisplay(`-${display.textContent}`);
+        else{
+            updateDisplay(`-${display.textContent}`);
+        }
     }
 }
+
+function decimal() {
+    if (!display.textContent.includes('.')){
+        pressNumber('.');
+    }
+}
+
+function percent() {
+    if(values[0]){
+        storeValue();
+        if (currentOperator === '/' || currentOperator === '*'){
+            values[1] = (values[1]/100);
+        }
+        else {
+            values[1] = values[0] * (values[1]/100);
+        }
+        evaluate();
+        values[1] = lastNum;
+    } 
+} 
 
 
 numberButtons.forEach((button) => {
@@ -137,3 +189,7 @@ clearButton.addEventListener('click', clearDisplay)
 equalsButton.addEventListener('click', equals);
 
 posNegButton.addEventListener('click', posNeg);
+
+decimalButton.addEventListener('click', decimal);
+
+percentButton.addEventListener('click', percent);
